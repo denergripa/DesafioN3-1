@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Globalization;
 
 namespace DesafioN3_1
 {
@@ -25,12 +26,30 @@ namespace DesafioN3_1
 
         public decimal SomaTotalXml()
         {
-            var total = (decimal)0;
+            // var total = (decimal)0;
+            Decimal total = 0;
+
+
             Parallel.ForEach(Xmls, (x) =>
             {
-                total += decimal.Parse(x.GetElementsByTagName("vNF")[0].InnerXml);
+                //total += decimal.Parse(x.GetElementsByTagName("vNF")[0].InnerXml);
+                if (x.GetElementsByTagName("vNF").Equals(null))
+                {
+
+                    Console.WriteLine("é nulo");
+                }
+                else
+                    total = NewMethod(x, total);
+
             });
+
             return total;
+
+            static decimal NewMethod(XmlDocument x, decimal total)
+            {
+                total += decimal.Parse(x.GetElementsByTagName("vNF")[0].InnerXml.Replace('.', ','));
+                return total;
+            }
         }
 
         public void CarregaXmls(string caminho)
